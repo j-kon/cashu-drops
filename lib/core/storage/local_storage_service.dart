@@ -12,7 +12,6 @@ class LocalStorageService {
   static const _knownMintsKey = 'known_mints';
   static const _developerModeKey = 'developer_mode';
   static const _useMockWalletKey = 'use_mock_wallet';
-  static const _transactionsKey = 'wallet_transactions';
 
   Future<void> setActiveMintUrl(String? url) async {
     if (url == null) {
@@ -57,13 +56,13 @@ class LocalStorageService {
     return _prefs.getBool(_useMockWalletKey) ?? true;
   }
 
-  Future<void> saveTransactions(List<DropTransaction> transactions) async {
+  Future<void> saveTransactions(List<DropTransaction> transactions, {bool isMock = false}) async {
     final list = transactions.map((t) => jsonEncode(t.toJson())).toList();
-    await _prefs.setStringList(_transactionsKey, list);
+    await _prefs.setStringList(isMock ? 'mock_wallet_transactions' : 'real_wallet_transactions', list);
   }
 
-  List<DropTransaction> getTransactions() {
-    final list = _prefs.getStringList(_transactionsKey);
+  List<DropTransaction> getTransactions({bool isMock = false}) {
+    final list = _prefs.getStringList(isMock ? 'mock_wallet_transactions' : 'real_wallet_transactions');
     if (list == null) return [];
     try {
       return list.map((item) => DropTransaction.fromJson(jsonDecode(item))).toList();

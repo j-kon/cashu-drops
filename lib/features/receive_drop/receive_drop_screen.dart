@@ -29,6 +29,16 @@ class _ReceiveDropScreenState extends ConsumerState<ReceiveDropScreen> {
       return;
     }
 
+    if (!token.startsWith('cashu')) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid Cashu token. Must start with "cashu"'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
     setState(() => _isLoading = true);
     try {
       final walletService = ref.read(cdkWalletServiceProvider);
@@ -73,56 +83,81 @@ class _ReceiveDropScreenState extends ConsumerState<ReceiveDropScreen> {
         title: const Text('Receive Drop'),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'Claim Cashu Token',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              const Text(
-                'Paste a cashu token string or scan a QR code to redeem satoshis to your wallet.',
-                style: TextStyle(color: Color(0xFF9E9EAF), fontSize: 14, height: 1.4),
-              ),
-              const SizedBox(height: 32),
-              TextField(
-                controller: _tokenController,
-                maxLines: 6,
-                decoration: InputDecoration(
-                  labelText: 'Cashu Token',
-                  hintText: 'cashuAeyJ...',
-                  alignLabelWithHint: true,
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.qr_code_scanner_rounded, color: Color(0xFF00F5A0)),
-                    onPressed: _scanQrCode,
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const Text(
+                  'Claim Cashu Token',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Paste a cashu token string or scan a QR code to redeem satoshis to your wallet.',
+                  style: TextStyle(color: Color(0xFF9E9EAF), fontSize: 14, height: 1.4),
+                ),
+                const SizedBox(height: 32),
+                TextField(
+                  controller: _tokenController,
+                  maxLines: 6,
+                  decoration: InputDecoration(
+                    labelText: 'Cashu Token',
+                    hintText: 'cashuAeyJ...',
+                    alignLabelWithHint: true,
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.qr_code_scanner_rounded, color: Color(0xFF00F5A0)),
+                      onPressed: _scanQrCode,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: _isLoading ? null : _handleReceive,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00F5A0),
-                  foregroundColor: Colors.black,
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: _isLoading ? null : _handleReceive,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF00F5A0),
+                    foregroundColor: Colors.black,
+                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black),
+                        )
+                      : const Text('Claim Drop'),
                 ),
-                child: _isLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2, color: Colors.black),
-                      )
-                    : const Text('Claim Drop'),
-              ),
-              const SizedBox(height: 12),
-              OutlinedButton.icon(
-                onPressed: _scanQrCode,
-                icon: const Icon(Icons.camera_alt_outlined),
-                label: const Text('Scan QR Code'),
-              ),
-            ],
+                const SizedBox(height: 12),
+                OutlinedButton.icon(
+                  onPressed: _scanQrCode,
+                  icon: const Icon(Icons.camera_alt_outlined),
+                  label: const Text('Scan QR Code'),
+                ),
+                const SizedBox(height: 32),
+                Card(
+                  color: const Color(0xFFFF9900).withOpacity(0.1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(color: const Color(0xFFFF9900).withOpacity(0.3)),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: Row(
+                      children: [
+                        Icon(Icons.warning_amber_rounded, color: Color(0xFFFF9900)),
+                        SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Use test tokens or tiny amounts while CashuDrops is in development.',
+                            style: TextStyle(color: Color(0xFFFF9900), fontSize: 12, height: 1.4),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

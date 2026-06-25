@@ -59,6 +59,23 @@ class HomeScreen extends ConsumerWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
+                    )
+                  else
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF00F5A0).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: const Color(0xFF00F5A0).withOpacity(0.3)),
+                      ),
+                      child: const Text(
+                        'REAL WALLET',
+                        style: TextStyle(
+                          color: Color(0xFF00F5A0),
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                 ],
               ),
