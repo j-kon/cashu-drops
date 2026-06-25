@@ -29,7 +29,7 @@ class MockCdkWalletService implements CdkWalletService {
 
   void _loadFromStorage() {
     _activeMintUrl = _localStorage.getActiveMintUrl() ?? 'https://testnut.cashu.space';
-    _transactions.addAll(_localStorage.getTransactions());
+    _transactions.addAll(_localStorage.getTransactions(isMock: true));
     if (_transactions.isEmpty) {
       _transactions.addAll([
         DropTransaction(
@@ -55,7 +55,7 @@ class MockCdkWalletService implements CdkWalletService {
           rawDebugInfo: '{"status": "mocked", "event": "CoffeeSend", "amount": 21}',
         ),
       ]);
-      _localStorage.saveTransactions(_transactions);
+      _localStorage.saveTransactions(_transactions, isMock: true);
     }
     _recalculateBalance();
   }
@@ -181,7 +181,7 @@ class MockCdkWalletService implements CdkWalletService {
     );
 
     _transactions.add(tx);
-    await _localStorage.saveTransactions(_transactions);
+    await _localStorage.saveTransactions(_transactions, isMock: true);
     _recalculateBalance();
 
     _logger.log(
@@ -219,7 +219,7 @@ class MockCdkWalletService implements CdkWalletService {
     );
 
     _transactions.add(tx);
-    await _localStorage.saveTransactions(_transactions);
+    await _localStorage.saveTransactions(_transactions, isMock: true);
     _recalculateBalance();
 
     _logger.log(
